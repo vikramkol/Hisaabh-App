@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hisaabh - Stay on budget, stay stress-free</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+           background: linear-gradient(135deg, #000000 0%, #000000 50%, #0f3d1e 65%, #1a5e2e 75%, #000000 100%);
+
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(45, 90, 61, 0.3);
+            /* border-radius: 30px; */
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(45, 90, 61, 0.1), rgba(0, 0, 0, 0.2));
+            z-index: -1;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #000000, #000000);
+            border: 2px solid #ffffff;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(45, 90, 61, 0.3);
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(135deg, #0c0c0c, #000000);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(45, 90, 61, 0.4);
+        }
+
+        .download-btn::before {
+            content: '⬇';
+            font-size: 18px;
+        }
+
+        .subtitle {
+            color: #ffffff;
+            font-size: 14px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cards-container {
+            margin: 40px 0;
+            height: 280px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .app-card {
+            position: absolute;
+            width: 160px;
+            height: 280px;
+            left: 50%;
+            top: 50%;
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            border: 3px solid rgba(255, 255, 255, 0.533);
+            overflow: hidden;
+        }
+
+        .app-card.opened {
+            transform: translate(-50%, -50%) rotateY(15deg) scale(1.1);
+            box-shadow: 0 25px 50px rgba(45, 90, 61, 0.4);
+            border-color: #ffffff;
+        }
+
+        .app-card:nth-child(1) {
+            transform: translate(-50%, -50%) translateX(-100px) rotateY(-20deg);
+            z-index: 1;
+        }
+
+        .app-card:nth-child(2) {
+            transform: translate(-50%, -50%) translateX(0) rotateY(0deg);
+            z-index: 3;
+        }
+
+        .app-card:nth-child(3) {
+            transform: translate(-50%, -50%) translateX(100px) rotateY(20deg);
+            z-index: 2;
+        }
+
+        .app-card.opened:nth-child(1) {
+            transform: translate(-50%, -50%) translateX(-150px) rotateY(-30deg) scale(1.1);
+            z-index: 4;
+        }
+
+        .app-card.opened:nth-child(2) {
+            transform: translate(-50%, -50%) translateX(0) rotateY(0deg) scale(1.2);
+            z-index: 6;
+        }
+
+        .app-card.opened:nth-child(3) {
+            transform: translate(-50%, -50%) translateX(150px) rotateY(30deg) scale(1.1);
+            z-index: 5;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 22px;
+            overflow: hidden;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #2d5a3d, #4a7c59, #1a4d2e);
+            background-size: 300% 300%;
+            animation: gradientMove 4s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .app-card:hover .card-image::before {
+            opacity: 1;
+        }
+
+        .card-image::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1); 
+                opacity: 0.3; 
+                border-width: 2px;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.2); 
+                opacity: 0.1; 
+                border-width: 1px;
+            }
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 20px 15px 15px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .app-card.opened .card-overlay {
+            transform: translateY(0);
+        }
+
+        .card-number {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: rgba(45, 90, 61, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-section {
+            margin: 40px 0;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+         
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            border: 3px solid #ffffffba;
+            box-shadow: 0 10px 25px rgba(45, 90, 61, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .logo-placeholder:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(45, 90, 61, 0.4);
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            background: linear-gradient(135deg, #ffffff, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 18px;
+            color: #b0d4c1;
+            margin: 10px 0 40px;
+            line-height: 1.4;
+        }
+
+        .description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #b0d4c1;
+            margin: 30px 0;
+            opacity: 0.9;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(180, 212, 193, 0.2);
+        }
+
+        .made-in {
+            font-size: 12px;
+            color: #8ca998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .heart {
+            color: #ff6b6b;
+            font-size: 14px;
+            animation: heartbeat 2s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: #4a7c59;
+            opacity: 0.7;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45, 90, 61, 0.1), transparent);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .floating-circle:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-circle:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 3s;
+        }
+
+        .floating-circle:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.1; }
+            50% { transform: translateY(-30px) scale(1.1); opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <a href="#" class="download-btn" onclick="handleDownload()">
+                Download for Android
+            </a>
+            <div class="subtitle">Get the full advertiser-free APK</div>
+
+            <div class="cards-container">
+                <div class="app-card" onclick="toggleCard(this)">
+                    <div class="card-inner">
+                        <div class="card-image">
+                         <img src="cash.png" alt="App Screenshot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 22px;">
+                        </div>
+                        <!-- <div class="card-number">1</div> -->
+                        <div class="card-overlay">
+                            <div style="color: #b0d4c1; font-size: 12px; font-weight: 500;">Cash transaction View</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="app-card" onclick="toggleCard(this)">
+                    <div class="card-inner">
+                        <div class="card-image">
+                             <img src="home.png" alt="App Screenshot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 22px;">
+                        </div>
+                        <!-- <div class="card-number">2</div> -->
+                        <div class="card-overlay">
+                            <div style="color: #b0d4c1; font-size: 12px; font-weight: 500;">Home View</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="app-card" onclick="toggleCard(this)">
+                    <div class="card-inner">
+                        <div class="card-image">
+                            <img src="stack.png" alt="App Screenshot" style="width: 100%; height: 100%; object-fit: cover; border-radius: 22px;">
+                        </div>
+                        <!-- <div class="card-number">3</div> -->
+                        <div class="card-overlay">
+                            <div style="color: #b0d4c1; font-size: 12px; font-weight: 500;">Analytics View</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="instructions">
+                    Click cards to preview your app screens
+                </div>
+            </div>
+
+            <div class="logo-section">
+                <div class="logo-placeholder">
+                   <img src="logoicon 1.png" alt="Hisaabh Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="brand-name">Hisaabh</div>
+                <div class="tagline">Stay on budget, stay<br>stress-free</div>
+            </div>
+
+            <div class="description">
+                Hisaabh automatically makes expense tracking effortless. Manage your spending, monitor income, and organize your finances—all while keeping your data secure and private.
+            </div>
+
+            <div class="footer">
+                <div class="made-in">
+                    Made with <span class="heart">♥</span> in India
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function handleDownload() {
+         alert("Download started! Your APK is being downloaded...");
+         
+        window.location.href = "https://github.com/vikramkol/Hisaabh-App/releases/download/v1.0.0/Hisaabh.apk";
+    }
+
+        function toggleCard(card) {
+            // Close all other cards
+            const allCards = document.querySelectorAll('.app-card');
+            allCards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('opened');
+                }
+            });
+            
+            // Toggle the clicked card
+            card.classList.toggle('opened');
+        }
+
+        // Auto-open middle card on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(50px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.8s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+                
+                // Auto-open the middle card after animation
+                setTimeout(() => {
+                    const middleCard = document.querySelectorAll('.app-card')[1];
+                    middleCard.classList.add('opened');
+                }, 1000);
+            }, 200);
+
+            // Add sequential animation to cards
+            const cards = document.querySelectorAll('.app-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform += ' translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = card.style.transform.replace('translateY(30px)', '');
+                }, 300 + (index * 200));
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const cards = document.querySelectorAll('.app-card');
+            if (e.key === 'ArrowLeft') {
+                toggleCard(cards[0]);
+            } else if (e.key === 'ArrowUp' || e.key === ' ') {
+                toggleCard(cards[1]);
+            } else if (e.key === 'ArrowRight') {
+                toggleCard(cards[2]);
+            }
+        });
+
+        // Close cards when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.app-card')) {
+                const allCards = document.querySelectorAll('.app-card');
+                allCards.forEach(card => {
+                    card.classList.remove('opened');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
